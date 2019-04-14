@@ -1,6 +1,6 @@
-package org.fasttrackit.onlineshopapi.transfer;
+package org.fasttrackit.onlineshopapi.transfer.product;
 
-public class UpdateProductRequest {
+public class CreateProductRequest {
 
     private String name;
     private String sku;
@@ -41,7 +41,7 @@ public class UpdateProductRequest {
 
     @Override
     public String toString() {
-        return "UpdateProductRequest{" +
+        return "CreateProductRequest{" +
                 "name='" + name + '\'' +
                 ", sku='" + sku + '\'' +
                 ", price=" + price +
