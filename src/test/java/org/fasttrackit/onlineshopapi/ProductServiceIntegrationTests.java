@@ -3,6 +3,7 @@ package org.fasttrackit.onlineshopapi;
 import org.fasttrackit.onlineshopapi.domain.Product;
 import org.fasttrackit.onlineshopapi.exception.ResourceNorFoundException;
 import org.fasttrackit.onlineshopapi.service.ProductService;
+import org.fasttrackit.onlineshopapi.steps.ProductSteps;
 import org.fasttrackit.onlineshopapi.transfer.product.CreateProductRequest;
 import org.fasttrackit.onlineshopapi.transfer.product.GetProductsRequest;
 import org.fasttrackit.onlineshopapi.transfer.product.UpdateProductRequest;
@@ -25,25 +26,19 @@ public class ProductServiceIntegrationTests {
 
     @Autowired
     private ProductService productService;
+    
+    @Autowired
+    private ProductSteps productSteps;
 
     @Test
     public void testCreateProduct_whenValidRequest_thenReturnProductWithId(){
-        Product product = createProduct();
+        Product product = productSteps.createProduct();
 
         assertThat(product, notNullValue());
         assertThat(product.getId(), greaterThan(0L));
 
     }
-
-    private Product createProduct() {
-        CreateProductRequest request = new CreateProductRequest();
-        request.setName("Laptop");
-        request.setPrice(10);
-        request.setQuantity(3);
-        request.setSku("dff4343");
-
-        return productService.createProduct(request);
-    }
+    
 
     @Test(expected = ResourceNorFoundException.class)
     public void testGetProduct_whenProductNotFound_thenThrowResourceNotFoundException() throws ResourceNorFoundException {
@@ -52,7 +47,7 @@ public class ProductServiceIntegrationTests {
 
     @Test
     public void testGetProduct_whenExistingId_thenReturnMatchingProduct() throws ResourceNorFoundException {
-        Product product = createProduct();
+        Product product = productSteps.createProduct();
 
         Product retrievedProduct = productService.getProduct(product.getId());
 
@@ -63,7 +58,7 @@ public class ProductServiceIntegrationTests {
 
     @Test
     public void testUpdateProduct_whenValidRequestWithAllFields_thenReturnUpdatedProduct() throws ResourceNorFoundException {
-        Product createdProduct = createProduct();
+        Product createdProduct = productSteps.createProduct();
         UpdateProductRequest request = new UpdateProductRequest();
         request.setName(createdProduct.getName() + "edited");
         request.setPrice(createdProduct.getPrice() + 10);
@@ -87,7 +82,7 @@ public class ProductServiceIntegrationTests {
 
     @Test(expected = ResourceNorFoundException.class)
     public void testDeleteProduct_whenExsistingId_thenProductIsDeleted() throws ResourceNorFoundException {
-        Product createdProduct = createProduct();
+        Product createdProduct = productSteps.createProduct();
         productService.deleteProduct(createdProduct.getId());
 
         productService.getProduct(createdProduct.getId());
@@ -95,7 +90,7 @@ public class ProductServiceIntegrationTests {
 
     @Test
     public void testGetProducts_whenAllCriteriaProvided_thenReturnFilteredResults(){
-        Product createdProduct = createProduct();
+        Product createdProduct = productSteps.createProduct();
 
         GetProductsRequest request = new GetProductsRequest();
         request.setPartialName("top");
@@ -105,6 +100,8 @@ public class ProductServiceIntegrationTests {
 
         Page<Product> products = productService.getProducts(request, PageRequest.of(0, 10));
 
-        assertThat(products.getTotalElements(), is(1));
+        assertThat(products.getTotalElements(), greaterThanOrEqualTo(1L));
+
+        //todo: for each product from the response assert that all criteria are matched
     }
 }

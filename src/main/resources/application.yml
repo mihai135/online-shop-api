@@ -3,7 +3,7 @@ server.port: 8082
 spring:
   jpa:
     show-sql: true
-    hibernate.ddl-auto: create
+    hibernate.ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL8Dialect
     generate-ddl: true
   datasource:
