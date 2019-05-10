@@ -1,8 +1,5 @@
 package org.fasttrackit.onlineshopapi.transfer.cart;
 
-import org.fasttrackit.onlineshopapi.transfer.customer.CustomerIdentifier;
-import org.fasttrackit.onlineshopapi.transfer.product.ProductIdentifier;
-
 import java.util.Set;
 
 public class SaveCartRequest {
